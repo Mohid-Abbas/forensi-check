@@ -11,6 +11,8 @@ class AnalyzeResponse(BaseModel):
     authenticity_score: float = Field(ge=0.0, le=100.0)
     ai_probability: float = Field(ge=0.0, le=1.0)
     verdict: str
+    decision_band: str
+    model_calibrated: bool
     forensic_report: str
     noise_signal: Signal
     cnn_signal: Signal
