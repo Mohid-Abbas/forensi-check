@@ -16,5 +16,5 @@ def build_report(
         f"Statistical signal: {noise_detail} "
         f"Neural signal: {vit_detail}"
         f"{calibration_note}{confidence_note} "
-        "This result combines sensor-noise residual analysis with transformer-based image forensics."
+        "This result combines sensor-noise residual, ELA/edge artifact checks, and transformer-based image forensics."
     )
