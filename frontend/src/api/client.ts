@@ -12,6 +12,8 @@ export type AnalyzeResponse = {
   model_calibrated: boolean;
   forensic_report: string;
   noise_signal: Signal;
+  ela_signal: Signal;
+  edge_signal: Signal;
   cnn_signal: Signal;
   heatmap: string;
   latency_ms: number;
