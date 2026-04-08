@@ -7,8 +7,11 @@ type Props = {
 };
 
 export function ResultPanel({ result, decisionThreshold }: Props) {
-  const thresholdBasedVerdict =
-    result.authenticity_score >= decisionThreshold ? "Authentic" : "AI-Generated";
+  const thresholdBasedVerdict = !result.model_calibrated
+    ? "Inconclusive"
+    : result.authenticity_score >= decisionThreshold
+      ? "Authentic"
+      : "AI-Generated";
   const scoreBar = `${result.authenticity_score}%`;
   const aiBar = `${result.ai_probability * 100}%`;
 
@@ -46,6 +49,14 @@ export function ResultPanel({ result, decisionThreshold }: Props) {
         <li>
           <strong>{result.noise_signal.name}:</strong> {result.noise_signal.value.toFixed(4)} -{" "}
           {result.noise_signal.detail}
+        </li>
+        <li>
+          <strong>{result.ela_signal.name}:</strong> {result.ela_signal.value.toFixed(4)} -{" "}
+          {result.ela_signal.detail}
+        </li>
+        <li>
+          <strong>{result.edge_signal.name}:</strong> {result.edge_signal.value.toFixed(4)} -{" "}
+          {result.edge_signal.detail}
         </li>
         <li>
           <strong>{result.cnn_signal.name}:</strong> {result.cnn_signal.value.toFixed(4)} -{" "}
