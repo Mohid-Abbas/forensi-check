@@ -6,9 +6,11 @@ import numpy as np
 from PIL import Image
 
 
-def generate_overlay_base64(rgb: np.ndarray, residual: np.ndarray, confidence_map: np.ndarray) -> str:
+def generate_overlay_base64(
+    rgb: np.ndarray, residual: np.ndarray, confidence_map: np.ndarray, artifact_map: np.ndarray
+) -> str:
     residual_map = cv2.normalize(residual.astype(np.float32), None, 0.0, 1.0, cv2.NORM_MINMAX)
-    combined = np.clip(0.55 * confidence_map + 0.45 * residual_map, 0.0, 1.0)
+    combined = np.clip(0.45 * confidence_map + 0.30 * residual_map + 0.25 * artifact_map, 0.0, 1.0)
     heat_u8 = (combined * 255).astype(np.uint8)
     heat_colored = cv2.applyColorMap(heat_u8, cv2.COLORMAP_JET)
     base = cv2.cvtColor(rgb, cv2.COLOR_RGB2BGR)
