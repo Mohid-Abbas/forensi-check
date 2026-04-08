@@ -55,9 +55,11 @@ VITE_API_BASE=http://localhost:8000
 - `ai_probability` (0-1)
 - `verdict` (`Authentic` or `AI-Generated`)
 - `forensic_report`
-- `noise_signal` + `cnn_signal` (explainability signals)
+- `noise_signal`, `ela_signal`, `edge_signal`, `cnn_signal` (explainability signals)
 - `heatmap` (base64 PNG overlay)
 - `latency_ms`
+
+If no tuned model checkpoint is configured, verdict is returned as `Inconclusive` to avoid misleading confidence.
 
 ## KPI Evaluation
 
