@@ -15,6 +15,8 @@ class AnalyzeResponse(BaseModel):
     model_calibrated: bool
     forensic_report: str
     noise_signal: Signal
+    ela_signal: Signal
+    edge_signal: Signal
     cnn_signal: Signal
     heatmap: str
     latency_ms: float
