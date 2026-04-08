@@ -39,15 +39,23 @@ async def analyze(file: UploadFile = File(...)) -> AnalyzeResponse:
     image = decode_image(data)
     noise = run_noise_stream(image.gray)
     vit = get_vit_classifier().infer(image.rgb)
-    fused = fuse_scores(noise.ai_noise_probability, vit.ai_probability)
+    fused = fuse_scores(noise.ai_noise_probability, vit.ai_probability, vit.is_calibrated)
     heatmap = generate_overlay_base64(image.rgb, noise.residual, vit.confidence_map)
-    forensic_report = build_report(fused.verdict, noise.detail, vit.detail)
+    forensic_report = build_report(
+        fused.verdict,
+        noise.detail,
+        vit.detail,
+        model_calibrated=vit.is_calibrated,
+        decision_band=fused.decision_band,
+    )
     elapsed_ms = (time.perf_counter() - started) * 1000.0
 
     return AnalyzeResponse(
         authenticity_score=fused.authenticity_score,
         ai_probability=round(fused.ai_probability, 4),
         verdict=fused.verdict,
+        decision_band=fused.decision_band,
+        model_calibrated=vit.is_calibrated,
         forensic_report=forensic_report,
         noise_signal=Signal(
             name="Noise Residual Entropy",
