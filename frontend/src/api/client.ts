@@ -8,6 +8,8 @@ export type AnalyzeResponse = {
   authenticity_score: number;
   ai_probability: number;
   verdict: string;
+  decision_band: "low" | "medium" | "high";
+  model_calibrated: boolean;
   forensic_report: string;
   noise_signal: Signal;
   cnn_signal: Signal;
