@@ -4,6 +4,7 @@ from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.schemas import AnalyzeResponse, Signal
+from app.services.artifact_stream import run_artifact_stream
 from app.services.fusion import fuse_scores
 from app.services.heatmap import generate_overlay_base64
 from app.services.noise_stream import run_noise_stream
@@ -38,9 +39,15 @@ async def analyze(file: UploadFile = File(...)) -> AnalyzeResponse:
 
     image = decode_image(data)
     noise = run_noise_stream(image.gray)
+    artifacts = run_artifact_stream(image.bgr, image.gray)
     vit = get_vit_classifier().infer(image.rgb)
-    fused = fuse_scores(noise.ai_noise_probability, vit.ai_probability, vit.is_calibrated)
-    heatmap = generate_overlay_base64(image.rgb, noise.residual, vit.confidence_map)
+    fused = fuse_scores(
+        noise.ai_noise_probability,
+        vit.ai_probability,
+        artifacts.ai_artifact_probability,
+        vit.is_calibrated,
+    )
+    heatmap = generate_overlay_base64(image.rgb, noise.residual, vit.confidence_map, artifacts.anomaly_map)
     forensic_report = build_report(
         fused.verdict,
         noise.detail,
@@ -61,6 +68,16 @@ async def analyze(file: UploadFile = File(...)) -> AnalyzeResponse:
             name="Noise Residual Entropy",
             value=round(noise.entropy, 4),
             detail=noise.detail,
+        ),
+        ela_signal=Signal(
+            name="ELA Recompression Anomaly",
+            value=round(artifacts.ela_score, 4),
+            detail=artifacts.ela_detail,
+        ),
+        edge_signal=Signal(
+            name="Edge Artifact Score",
+            value=round(artifacts.edge_artifact_score, 4),
+            detail=artifacts.edge_detail,
         ),
         cnn_signal=Signal(
             name="ViT Confidence",
