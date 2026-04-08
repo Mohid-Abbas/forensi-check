@@ -33,6 +33,32 @@ Optional model weights:
 - Set `FORENSICHECK_VIT_WEIGHTS` to a fine-tuned checkpoint path.
 - If unset, the app uses a pre-trained backbone with a two-class head for MVP bootstrapping.
 
+## Train Your Model (Recommended)
+
+Place labeled images in:
+
+- `backend/dataset/real`
+- `backend/dataset/ai`
+
+Then train:
+
+```bash
+cd backend
+python scripts/train_vit.py --data-dir dataset --output models/forensic_vit_best.pth --epochs 6 --batch-size 16
+```
+
+Evaluate:
+
+```bash
+python scripts/evaluate_vit.py --data-dir dataset --weights models/forensic_vit_best.pth
+```
+
+Use in API:
+
+```bash
+FORENSICHECK_VIT_WEIGHTS=backend/models/forensic_vit_best.pth
+```
+
 ### Frontend
 
 ```bash
