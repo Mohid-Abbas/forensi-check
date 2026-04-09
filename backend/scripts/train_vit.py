@@ -145,7 +145,15 @@ def main() -> None:
 
     output_path = Path(args.output)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    torch.save(best_state, output_path)
+    checkpoint = {
+        "model_state_dict": best_state,
+        "class_to_idx": base_ds.class_to_idx,
+        "meta": {
+            "model": "vit_b_16",
+            "num_classes": 2,
+        },
+    }
+    torch.save(checkpoint, output_path)
     print(f"Saved best checkpoint to: {output_path}")
     print(f"Best validation accuracy: {best_acc * 100:.2f}%")
 
