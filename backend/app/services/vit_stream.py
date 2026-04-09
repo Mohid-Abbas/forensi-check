@@ -21,10 +21,22 @@ class ViTClassifier:
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         self.model = models.vit_b_16(weights=models.ViT_B_16_Weights.DEFAULT)
         self.is_calibrated = False
+        self.ai_class_index = 0
         weights_path = os.getenv("FORENSICHECK_VIT_WEIGHTS", "").strip()
         if weights_path and os.path.exists(weights_path):
             self.model.heads.head = torch.nn.Linear(self.model.heads.head.in_features, 2)
-            state = torch.load(weights_path, map_location=self.device)
+            loaded = torch.load(weights_path, map_location=self.device)
+            if isinstance(loaded, dict) and "model_state_dict" in loaded:
+                state = loaded["model_state_dict"]
+                class_to_idx = loaded.get("class_to_idx", {})
+                if isinstance(class_to_idx, dict) and "ai" in class_to_idx:
+                    self.ai_class_index = int(class_to_idx["ai"])
+            else:
+                # Backward compatibility with old checkpoints that only stored weights.
+                state = loaded
+            override_idx = os.getenv("FORENSICHECK_AI_CLASS_INDEX", "").strip()
+            if override_idx:
+                self.ai_class_index = int(override_idx)
             self.model.load_state_dict(state, strict=False)
             self.is_calibrated = True
         self.model.to(self.device).eval()
@@ -43,8 +55,11 @@ class ViTClassifier:
             with torch.inference_mode():
                 logits = self.model(tensor)
                 probs = torch.softmax(logits, dim=1).detach().cpu().numpy()[0]
-            ai_probability = float(probs[1])
-            detail = f"ViT AI probability={ai_probability:.2f} (fine-tuned checkpoint)."
+            ai_probability = float(probs[self.ai_class_index])
+            detail = (
+                f"ViT AI probability={ai_probability:.2f} "
+                f"(fine-tuned checkpoint, ai_class_index={self.ai_class_index})."
+            )
         else:
             # Without a forensic checkpoint, avoid random/unreliable class decisions.
             ai_probability = 0.5
