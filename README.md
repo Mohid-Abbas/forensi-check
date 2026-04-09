@@ -59,6 +59,18 @@ Use in API:
 FORENSICHECK_VIT_WEIGHTS=backend/models/forensic_vit_best.pth
 ```
 
+Inspect checkpoint class mapping:
+
+```bash
+python scripts/inspect_checkpoint.py --weights models/forensic_vit_best.pth
+```
+
+If using an old/raw checkpoint without metadata, set class index manually:
+
+```bash
+FORENSICHECK_AI_CLASS_INDEX=0
+```
+
 ### Frontend
 
 ```bash
