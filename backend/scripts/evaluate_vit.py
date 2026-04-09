@@ -37,7 +37,8 @@ def main() -> None:
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model = models.vit_b_16(weights=models.ViT_B_16_Weights.DEFAULT)
     model.heads.head = torch.nn.Linear(model.heads.head.in_features, 2)
-    state = torch.load(weights_path, map_location=device)
+    loaded = torch.load(weights_path, map_location=device)
+    state = loaded["model_state_dict"] if isinstance(loaded, dict) and "model_state_dict" in loaded else loaded
     model.load_state_dict(state, strict=False)
     model.to(device).eval()
 
