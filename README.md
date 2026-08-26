@@ -39,20 +39,20 @@ flowchart TD
     K -->|Load| F
     G -->|KPI| L
     
-    style Frontend fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    style Backend fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    style Data fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
-    style B fill:#bbdefb,stroke:#01579b
-    style C fill:#e1bee7,stroke:#4a148c
-    style D fill:#e1bee7,stroke:#4a148c
-    style E fill:#e1bee7,stroke:#4a148c
-    style F fill:#e1bee7,stroke:#4a148c
-    style G fill:#e1bee7,stroke:#4a148c
-    style H fill:#e1bee7,stroke:#4a148c
-    style I fill:#e1bee7,stroke:#4a148c
-    style J fill:#c8e6c9,stroke:#1b5e20
-    style K fill:#c8e6c9,stroke:#1b5e20
-    style L fill:#c8e6c9,stroke:#1b5e20
+    style Frontend fill:#bbdefb,stroke:#01579b,stroke-width:2px,color:#000000
+    style Backend fill:#e1bee7,stroke:#4a148c,stroke-width:2px,color:#000000
+    style Data fill:#c8e6c9,stroke:#1b5e20,stroke-width:2px,color:#000000
+    style B fill:#e3f2fd,stroke:#01579b,color:#000000
+    style C fill:#f3e5f5,stroke:#4a148c,color:#000000
+    style D fill:#f3e5f5,stroke:#4a148c,color:#000000
+    style E fill:#f3e5f5,stroke:#4a148c,color:#000000
+    style F fill:#f3e5f5,stroke:#4a148c,color:#000000
+    style G fill:#f3e5f5,stroke:#4a148c,color:#000000
+    style H fill:#f3e5f5,stroke:#4a148c,color:#000000
+    style I fill:#f3e5f5,stroke:#4a148c,color:#000000
+    style J fill:#dcedc8,stroke:#1b5e20,color:#000000
+    style K fill:#dcedc8,stroke:#1b5e20,color:#000000
+    style L fill:#dcedc8,stroke:#1b5e20,color:#000000
 ```
 
 ## Repository Structure
